@@ -177,4 +177,4 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 
 ## 📞 Support
 
-Pour obtenir de l'aide, envoyez un email à support@hrms.com ou créez une issue dans le dépôt.
+Pour obtenir de l'aide, envoyez un email à support@astres-groupe.com ou am.camara@outlook.fr ou créez une issue dans le dépôt.
