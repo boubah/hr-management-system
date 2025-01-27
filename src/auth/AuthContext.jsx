@@ -60,9 +60,16 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
+  const logout = async () => {
+    try {
+      // Simulation d'une requête API de déconnexion
+      await new Promise(resolve => setTimeout(resolve, 500));
+      localStorage.removeItem('user');
+      setUser(null);
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+      throw error;
+    }
   };
 
   const hasRole = (requiredRoles) => {
