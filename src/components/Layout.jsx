@@ -27,8 +27,8 @@ export default function Layout() {
                   <div className="flex flex-shrink-0 items-center">
                     <img
                       className="h-10 w-auto"
-                      src="/uims-logo.png"
-                      alt="UIMS Africa Group"
+                      src="/ums-logo.png"
+                      alt=""
                     />
                   </div>
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
