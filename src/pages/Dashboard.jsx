@@ -1,36 +1,72 @@
-import { UserGroupIcon, BriefcaseIcon, CalendarIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
-
-const stats = [
-  { name: 'Total Employés', stat: '71', icon: UserGroupIcon },
-  { name: 'Postes Ouverts', stat: '12', icon: BriefcaseIcon },
-  { name: 'Demandes de Congés en Attente', stat: '5', icon: CalendarIcon },
-  { name: 'Masse Salariale Mensuelle', stat: '124 000 €', icon: CurrencyDollarIcon },
-];
+import React, { useState, useEffect } from 'react';
+import DashboardHeader from '../components/dashboard/DashboardHeader';
+import EmployeeMetrics from '../components/dashboard/widgets/EmployeeMetrics';
+import LeaveMetrics from '../components/dashboard/widgets/LeaveMetrics';
+import RecruitmentMetrics from '../components/dashboard/widgets/RecruitmentMetrics';
+import PerformanceMetrics from '../components/dashboard/widgets/PerformanceMetrics';
+import useDashboardStore from '../store/dashboardStore';
 
 export default function Dashboard() {
+  const { preferences, filters } = useDashboardStore();
+  const [activeWidget, setActiveWidget] = useState('employees');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Refresh data logic here
+    }, preferences.refreshInterval);
+
+    return () => clearInterval(interval);
+  }, [preferences.refreshInterval]);
+
+  const renderWidget = () => {
+    switch (activeWidget) {
+      case 'employees':
+        return <EmployeeMetrics />;
+      case 'leaves':
+        return <LeaveMetrics />;
+      case 'recruitment':
+        return <RecruitmentMetrics />;
+      case 'performance':
+        return <PerformanceMetrics />;
+      default:
+        return <EmployeeMetrics />;
+    }
+  };
+
   return (
-    <div>
-      <h2 className="text-2xl font-bold leading-7 text-uims-black sm:truncate sm:text-3xl sm:tracking-tight">
-        Tableau de Bord
-      </h2>
-      <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((item) => (
-          <div
-            key={item.name}
-            className="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6"
-          >
-            <dt>
-              <div className="absolute rounded-md bg-uims-red p-3">
-                <item.icon className="h-6 w-6 text-white" aria-hidden="true" />
-              </div>
-              <p className="ml-16 truncate text-sm font-medium text-gray-500">{item.name}</p>
-            </dt>
-            <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-              <p className="text-2xl font-semibold text-uims-black">{item.stat}</p>
-            </dd>
+    <div className="space-y-6">
+      <DashboardHeader />
+
+      <div className="bg-white shadow rounded-lg">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
+            {[
+              { id: 'employees', name: 'Employés' },
+              { id: 'leaves', name: 'Congés' },
+              { id: 'recruitment', name: 'Recrutement' },
+              { id: 'performance', name: 'Performance' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveWidget(tab.id)}
+                className={`${
+                  activeWidget === tab.id
+                    ? 'border-uims-red text-uims-red'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors duration-200`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="p-6">
+          <div className="bg-gray-50 rounded-lg">
+            {renderWidget()}
           </div>
-        ))}
-      </dl>
+        </div>
+      </div>
     </div>
   );
 }

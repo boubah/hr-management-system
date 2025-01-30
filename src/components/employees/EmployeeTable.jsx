@@ -1,39 +1,17 @@
-import React, { useState } from 'react';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import React from 'react';
 import useEmployeeStore from '../../store/employeeStore';
-import EmployeeDetailsDialog from './EmployeeDetailsDialog';
 
-export default function EmployeeList() {
-  const { employees, selectedEmployeeId, setSelectedEmployee } = useEmployeeStore();
-  const [showFilters, setShowFilters] = useState(false);
+export default function EmployeeTable({ onSelectEmployee, selectedEmployeeId }) {
+  const { employees } = useEmployeeStore();
 
   return (
-    <div className="space-y-6">
-      <div className="sm:flex sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Employés</h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Liste des employés
-          </p>
-        </div>
-        <div className="mt-4 sm:mt-0">
-          <button
-            type="button"
-            onClick={() => setSelectedEmployee('new')}
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-uims-red px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-uims-red/90"
-          >
-            <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
-            Nouvel Employé
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+    <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+      <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nom
+                Employé
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Département
@@ -48,9 +26,9 @@ export default function EmployeeList() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {employees.map((employee) => (
-              <tr 
+              <tr
                 key={employee.id}
-                onClick={() => setSelectedEmployee(employee.id)}
+                onClick={() => onSelectEmployee(employee.id)}
                 className={`cursor-pointer hover:bg-gray-50 ${
                   selectedEmployeeId === employee.id ? 'bg-gray-50' : ''
                 }`}
@@ -60,7 +38,7 @@ export default function EmployeeList() {
                     <div className="flex-shrink-0 h-10 w-10">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={`https://ui-avatars.com/api/?name=${employee.firstName}+${employee.lastName}&background=D62828&color=fff`}
+                        src={employee.photoUrl || `https://ui-avatars.com/api/?name=${employee.firstName}+${employee.lastName}`}
                         alt=""
                       />
                     </div>
@@ -94,13 +72,6 @@ export default function EmployeeList() {
           </tbody>
         </table>
       </div>
-
-      {selectedEmployeeId && (
-        <EmployeeDetailsDialog
-          employeeId={selectedEmployeeId}
-          onClose={() => setSelectedEmployee(null)}
-        />
-      )}
     </div>
   );
 }
